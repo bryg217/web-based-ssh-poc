@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <title>SSH Client</title>
+  <link rel="stylesheet" href="node_modules/xterm/css/xterm.css" />
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" src="node_modules/xterm/lib/xterm.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .terminal {
+      font-family: monospace;
+      color: white;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <h1>SSH</h1>
+  <div id="terminal">
+  </div>
+  <script>
+    // Connect to the socket.io server
+    const socket = io.connect('http://localhost:3000');
+    
+    // Instantiate Terminal Component
+    const term = new Terminal();
+    term.open(document.getElementById('terminal'));
+
+    // Handle Data Sent from Server
+    socket.on('output', function (data) {
+      term.write(data);
+    });
+    
+    // Handle Key Press
+    $(document).on('keypress', function(e) {
+      const char = String.fromCharCode(e.which);
+      term.write(char);
+    });
+  </script>
+</body>
+</html>
